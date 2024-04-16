@@ -25,7 +25,6 @@ To start using GotsJS in your Node.js project:
 
 **You can install it via NPM**
     
-    ```bash
     npm install gotsjs
 
 ## 🔧 Usage
