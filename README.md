@@ -21,9 +21,12 @@ GotsJS is a Golang JavaScript library for generating self-signed TLS certificate
 
 ## ⚙️ Installation
 
-To start using GotsJS in your Node.js project, you can install it via npm
+To start using GotsJS in your Node.js project:
 
-**npm install GotsJS**
+**You can install it via NPM**
+    
+    ```bash
+    npm install gotsjs
 
 ## 🔧 Usage
 
@@ -43,25 +46,33 @@ Here's an example of how you can utilize GotsJS to generate self-signed TLS cert
 
    ```bash
 
-    const https = require('https');
-    const fs = require('fs');
-    const path = require('path');
+    // Paths for certificate and key files
+    const certPath = 'certificate.pem';
+    const keyPath = 'private_key.pem';
+    const outputDir = './certs'; // User-defined output directory
 
-    // Load generated certificate and private key
-    const certPath = path.join(__dirname, 'certificates', 'certificate.pem');
-    const keyPath = path.join(__dirname, 'certificates', 'private_key.pem');
-    const cert = fs.readFileSync(certPath);
-    const key = fs.readFileSync(keyPath);
+    // Generate and save certificate and private key using gots library
+    gots.generateAndSaveCert(certPath, keyPath, outputDir);
 
-    // Set up HTTPS server with loaded certificate and private key
-    const options = { cert, key };
-    const server = https.createServer(options, (req, res) => {
-    res.writeHead(200);
-    res.end('Hello, HTTPS!');
+    const app = express();
+
+    // Define routes
+    app.get('/', (req, res) => {
+    res.send('Hello, HTTPS!');
     });
 
-    server.listen(443, () => {
-    console.log('Server running on port 443');
+    // Set up HTTPS server
+    const options = {
+    key: fs.readFileSync(path.join(outputDir, keyPath)), // Use output directory for key path
+    cert: fs.readFileSync(path.join(outputDir, certPath)) // Use output directory for cert path
+    };
+
+    const server = https.createServer(options, app);
+
+    // Start the server
+    const PORT = process.env.PORT || 3000;
+    server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
     });
 
 ## 🤔 Why Use GotsJS? 
